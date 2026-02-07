@@ -4,10 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 )
 
 var (
 	writer *bufio.Writer
+	mutex  sync.Mutex
 	count  int
 )
 
@@ -19,6 +21,9 @@ func InitWriter() {
 }
 
 func Write(buf []byte) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
 	n, err := writer.Write(buf)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -31,9 +36,14 @@ func Write(buf []byte) {
 }
 
 func InvokeFlush() {
+	mutex.Lock()
+	defer mutex.Unlock()
+	flushLocked()
+}
+
+func flushLocked() {
 	if count > 0 {
-		err := writer.Flush()
-		if err != nil {
+		if err := writer.Flush(); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
 		count = 0
