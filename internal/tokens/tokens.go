@@ -9,5 +9,5 @@ const (
 	TokenLevel
 	TokenTimestamp
 	TokenCaller
-	TokenLiteral
+	TokenSeparator
 )

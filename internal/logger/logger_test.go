@@ -7,7 +7,7 @@ import (
 
 	"github.com/nool01/velog/internal/buffer"
 	"github.com/nool01/velog/internal/format"
-	"github.com/nool01/velog/internal/logger/console_logger"
+	"github.com/nool01/velog/internal/logger/writer"
 	"github.com/nool01/velog/internal/logger_config"
 	"github.com/nool01/velog/pkg/velog/velog_config"
 )
@@ -19,10 +19,10 @@ func TestLogger_Log(t *testing.T) {
 		Caller:    false,
 	}
 
-	format.L["l"] = []byte(" | ")
+	format.L["s"] = []byte(" | ")
 
 	ch := make(chan *bytes.Buffer, 1)
-	console_logger.LogBufferChannel = ch
+	writer.LogBufferChannel = ch
 
 	l := &Logger{}
 
@@ -48,17 +48,17 @@ func TestLogger_Debug(t *testing.T) {
 		Caller:    false,
 	}
 
-	format.L["l"] = []byte(" | ")
+	format.L["s"] = []byte(" | ")
 	l := &Logger{}
 
-	console_logger.LogBufferChannel = make(chan *bytes.Buffer, 1)
+	writer.LogBufferChannel = make(chan *bytes.Buffer, 1)
 	logger_config.ApiConfig = &velog_config.Config{
 		Debug: false,
 	}
 
 	l.Debug("TestLogger_Debug", "Hello World")
 	select {
-	case <-console_logger.LogBufferChannel:
+	case <-writer.LogBufferChannel:
 		t.Fatalf("buffer should be empty when debug is off")
 	default:
 	}
@@ -68,7 +68,7 @@ func TestLogger_Debug(t *testing.T) {
 	}
 	l.Debug("TestLogger_Debug", "Hello World")
 	select {
-	case buf := <-console_logger.LogBufferChannel:
+	case buf := <-writer.LogBufferChannel:
 		if !strings.Contains(buf.String(), "TestLogger_Debug | Hello World | DEBUG") {
 			t.Errorf("unexpected log buffer %s", buf.String())
 		}

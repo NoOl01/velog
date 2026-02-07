@@ -25,14 +25,14 @@ type LogFormat []tokens.TokenType
 
 var LogFormatTokens *LogFormat
 
-func Format(format, literal string) {
+func Format(format, separator string) {
 	LogFormatTokens = &LogFormat{}
 
-	if literal == "" {
-		literal = " | "
+	if separator == "" {
+		separator = " | "
 	}
 
-	L["l"] = []byte(literal)
+	L["s"] = []byte(separator)
 
 	if err := ParseFormat(format, LogFormatTokens); err != nil {
 		fmt.Println("ParseFormat(format) failed:", err)
@@ -60,8 +60,8 @@ func ParseFormat(format string, logFormat *LogFormat) error {
 			*logFormat = append(*logFormat, tokens.TokenTimestamp)
 		case "caller":
 			*logFormat = append(*logFormat, tokens.TokenCaller)
-		case "l":
-			*logFormat = append(*logFormat, tokens.TokenLiteral)
+		case "s":
+			*logFormat = append(*logFormat, tokens.TokenSeparator)
 		default:
 			return velog_errs.UnknownFormat
 		}

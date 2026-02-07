@@ -3,8 +3,8 @@ package logger
 import (
 	"github.com/nool01/velog/internal/buffer"
 	"github.com/nool01/velog/internal/format"
-	"github.com/nool01/velog/internal/logger/console_logger"
 	"github.com/nool01/velog/internal/logger/log_data"
+	"github.com/nool01/velog/internal/logger/writer"
 	"github.com/nool01/velog/internal/logger_config"
 	"github.com/nool01/velog/internal/tokens"
 	"github.com/nool01/velog/internal/unsafe_conv"
@@ -22,7 +22,7 @@ func (l *Logger) Log(name, msg string, level velog_config.LogLevel) {
 		Level:     format.LevelToBytes[level],
 		Timestamp: timestamp,
 		Caller:    GetCaller(),
-		Literal:   format.L["l"],
+		Separator: format.L["s"],
 	}
 
 	for _, token := range *format.LogFormatTokens {
@@ -37,15 +37,15 @@ func (l *Logger) Log(name, msg string, level velog_config.LogLevel) {
 			buf.Write(data.Timestamp)
 		case tokens.TokenCaller:
 			buf.Write(data.Caller)
-		case tokens.TokenLiteral:
-			buf.Write(data.Literal)
+		case tokens.TokenSeparator:
+			buf.Write(data.Separator)
 		}
 	}
 
 	buf.WriteByte('\n')
 
 	select {
-	case console_logger.LogBufferChannel <- buf:
+	case writer.LogBufferChannel <- buf:
 	default:
 		buffer.PutBuffer(buf)
 	}

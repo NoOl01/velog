@@ -10,14 +10,22 @@ const (
 )
 
 type Config struct {
-	Format  string
-	Literal string
-	Debug   bool
-	Console OutputFormat
-	File    FileOutput
+	Format    string
+	Separator string
+	Debug     bool
+	Console   ConsoleConfig
+	File      FileConfig
 }
 
-type FileOutput struct {
+type ConsoleConfig struct {
+	Enabled bool
+	Output  OutputFormat
+}
+
+type FileConfig struct {
+	Enabled       bool
+	Directory     string
+	FileName      string
 	FileExtension string
 	AutoDelete    int
 	AutoArchive   int

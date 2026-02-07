@@ -17,9 +17,12 @@ func TestLoggerIntegration(t *testing.T) {
 	defer func() { os.Stdout = oldStdout }()
 
 	config := &velog_config.Config{
-		Format:  "${name} ${l} ${content} ${l} ${level} ${l}",
-		Literal: " | ",
-		Debug:   true,
+		Format:    "${name} ${s} ${content} ${s} ${level} ${s}",
+		Separator: " | ",
+		Debug:     true,
+		Console: velog_config.ConsoleConfig{
+			Enabled: true,
+		},
 	}
 
 	log := velog.Start(config)

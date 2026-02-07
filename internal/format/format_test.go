@@ -14,8 +14,8 @@ func TestParseFormat(t *testing.T) {
 		format string
 		want   LogFormat
 	}{
-		{"${name} ${l} ${content} ${l} ${level} ${l} ${timestamp} ${l} ${caller}", LogFormat{0, 5, 1, 5, 2, 5, 3, 5, 4}},
-		{"${name} ${l} ${level} ${l} ${timestamp} ${l}", LogFormat{0, 5, 2, 5, 3, 5}},
+		{"${name} ${s} ${content} ${s} ${level} ${s} ${timestamp} ${s} ${caller}", LogFormat{0, 5, 1, 5, 2, 5, 3, 5, 4}},
+		{"${name} ${s} ${level} ${s} ${timestamp} ${s}", LogFormat{0, 5, 2, 5, 3, 5}},
 	}
 
 	for _, test := range tests {
@@ -33,7 +33,7 @@ func TestParseFormat(t *testing.T) {
 }
 
 func TestParseFormat_UnknownFormat(t *testing.T) {
-	format := "${name} ${l} ${unknown} ${l}"
+	format := "${name} ${s} ${unknown} ${s}"
 
 	logFormat := LogFormat{}
 	err := ParseFormat(format, &logFormat)
@@ -47,9 +47,9 @@ func TestAutoDisable(t *testing.T) {
 		format string
 		want   []bool
 	}{
-		{"${name} ${l} ${content} ${l} ${level} ${l} ${timestamp} ${l} ${caller}", []bool{true, true}},
-		{"${name} ${l} ${level} ${l} ${timestamp} ${l}", []bool{true, false}},
-		{"${name} ${l} ${level} ${l} ${caller} ${l}", []bool{false, true}},
+		{"${name} ${s} ${content} ${s} ${level} ${s} ${timestamp} ${s} ${caller}", []bool{true, true}},
+		{"${name} ${s} ${level} ${s} ${timestamp} ${s}", []bool{true, false}},
+		{"${name} ${s} ${level} ${s} ${caller} ${s}", []bool{false, true}},
 	}
 
 	for _, test := range tests {

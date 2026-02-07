@@ -4,7 +4,7 @@ type LogData struct {
 	Level     []byte
 	Timestamp []byte
 	Caller    []byte
-	Literal   []byte
+	Separator []byte
 	Name      []byte
 	Content   []byte
 }

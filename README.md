@@ -33,8 +33,8 @@ import (
 
 func main() {
     config := &velog_config.Config{
-        Format: "${name} ${l} ${content} ${l} ${level} ${l} ${timestamp} ${l} ${caller}",
-        Literal: " | ",
+        Format: "${name} ${s} ${content} ${s} ${level} ${s} ${timestamp} ${s} ${caller}",
+        Separator: " | ",
     }
     log := velog.Start(config)
     defer velog.Stop()
@@ -56,4 +56,4 @@ func main() {
 - `${content}` - Log message
 - `${timestamp}` - Time of the log call
 - `${caller}` - The place where the log was called
-- `${l}` - Literal
+- `${s}` - Separator
